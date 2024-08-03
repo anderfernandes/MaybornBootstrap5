@@ -1,0 +1,49 @@
+version: '3.3'
+
+services:
+  # Astral (must be built separetely)
+  astral:
+    image: anderfernandes/astral:1.0.0-alpha.5
+    ports:
+      - 8000:8000
+
+  muracms:
+    image: murasoftware/muracms:7.1
+    depends_on:
+      - svc_muradb
+    environment:
+      MURA_ADMIN_USERNAME: admin
+      MURA_ADMIN_PASSWORD: admin
+      MURA_ADMINEMAIL: youremail@domain.com
+      MURA_APPRELOADKEY: appreload
+      MURA_DATASOURCE: dsn_muracms
+      MURA_DATABASE: muradb
+      MURA_DBTYPE: mssql
+      MURA_DBUSERNAME: sa
+      MURA_DBPASSWORD: 5trongP@55w0rd 
+      MURA_DBHOST: svc_muradb
+      MURA_DBPORT: 1433
+      MURA_SITEIDINURLS: "false"
+      MURA_INDEXFILEINURLS: "true"
+      MURA_TESTBOX: "true"
+      MURA_USESSL: "false"
+      MURA_ALLOWAUTOUPDATES: "false"
+    volumes:
+      - ./:/var/www/themes/MaybornBootstrap5
+    ports:
+      - "8888:8888"
+
+  # DB
+  svc_muradb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: 5trongP@55w0rd 
+    volumes:
+      - vol_muradb:/var/opt/mssql
+    ports:
+      - "1433:1433"
+
+# Mounts
+volumes:
+  vol_muradb:
