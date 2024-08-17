@@ -420,26 +420,29 @@
                 <label for="country" class="form-label">School, Organization or Group Name</label>
                 <select class="form-select" id="organization" name="schoolId" required="">
                   <option value="">Choose...</option>
-                  <option value="0">My school is not on the list</option>
                   <cfloop array="#organizations#" item="organization">
                   <option value="#organization.id#">#organization.name#</option>
                   </cfloop>
+                  <option value="0">My school is not on the list</option>
                 </select>
+                <span class="form-text">
+                  Schools are ordered alphabetically. If your school is not on the list, select the last option.
+                </span>
               </div>
               <br />
 
               <div id="organization-details" class="row g-3" style="display:none">
                 <div class="col-sm-12">
                   <label for="school" class="form-label">School, Organization or Group Name</label>
-                  <input type="text" name="school" class="form-control" id="school" name="school" placeholder="School, Organization or Group Name" value="">
+                  <input type="text" name="school" class="form-control" id="school" name="school" placeholder="School, Organization or Group Name" min="2" max="255" value="">
                 </div>
                 <div class="col-sm-12">
                   <label for="address" class="form-label">Address</label>
-                  <input type="text" name="address" class="form-control" id="address" placeholder="Address" value="">
+                  <input type="text" name="address" class="form-control" id="address" placeholder="Address" min="2" maxlength="255" value="">
                 </div>
                 <div class="col-sm-6">
                   <label for="city" class="form-label">City</label>
-                  <input type="text" name="city" class="form-control" id="city" placeholder="City" value="">
+                  <input type="text" name="city" class="form-control" id="city" placeholder="City" min="2" max="63" value="">
                 </div>
                 <div class="col-sm-6">
                   <label for="state" class="form-label">State</label>
@@ -449,11 +452,11 @@
                 </div>
                 <div class="col-sm-6">
                   <label for="school-zip" class="form-label">ZIP</label>
-                  <input type="text" name="zip" class="form-control" id="school-zip" placeholder="ZIP" value="">
+                  <input type="text" name="zip" class="form-control" id="school-zip" placeholder="5 digit zip code" minlength="5" maxlength="5" value="">
                 </div>
                 <div class="col-sm-6">
                   <label for="phone" class="form-label">Phone</label>
-                  <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone" value="">
+                  <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone with area code, numbers only" minlength="10" maxlength="10" value="">
                 </div>
               </div>
               <br />
@@ -475,7 +478,7 @@
                 </div>
                 <div class="col-sm-6">
                   <label for="cell" class="form-label">Phone</label>
-                  <input type="text" name="cell" name="cell" class="form-control" id="cell" placeholder="Phone" minlength="10" maxlength="10" required>
+                  <input type="text" name="cell" name="cell" class="form-control" id="cell" placeholder="Phone with area code, numbers only" minlength="10" maxlength="10" required>
                 </div>
               </div>
               

@@ -1,3 +1,3 @@
 <cfscript>
-  API_URL = "http://172.23.0.3:8000/api"
+  API_URL = "http://192.168.1.72:8000/api"
 </cfscript>
