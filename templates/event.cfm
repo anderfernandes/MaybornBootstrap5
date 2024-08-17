@@ -1,7 +1,5 @@
 <cfinclude template="inc/globals.cfm" />
 <cfscript>
-  //API_URL = "https://astral.ctcd.org/api"
-  //API_URL = "http://127.0.0.1:8000/api"
   try {
     req = new http(method = "GET", charset = "UTF-8", url= API_URL & "/event/" & url.id)
     data = deserializeJSON(req.send().getPrefix().filecontent)

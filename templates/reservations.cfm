@@ -1,7 +1,5 @@
 <cfinclude template="inc/globals.cfm" />
 <cfscript>
-  //API_URL = "https://astral.ctcd.org/api"
-  //API_URL = "http://127.0.0.1:8000/api"
   data = structNew()
   seats = structKeyExists(form, 'date') && structKeyExists(form, 'students') && structKeyExists(form, 'teachers') && structKeyExists(form, 'parents') 
     ? (toNumeric(form.students) + toNumeric(form.teachers) + toNumeric(form.parents)) 
@@ -267,7 +265,7 @@
             <p class="text-body-secondary">Tell us the date you want for your field trip and how many people total will be attending, number may not be more than 180 people.</p>
           </div>
 
-          <form class="col" method="POST" id="availability" action="">
+          <form class="col" method="POST" id="availability" action="##overview">
             <div class="row row-cols-1 g-4">
               <div class="col d-flex flex-column gap-2">
                 <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
@@ -309,7 +307,15 @@
                 <label for="parents" class="text-body-secondary">Parents included in the field trip's invoice.</label>
                 <input class="form-range" type="range" name="parents" min="0" max="180" value="#structKeyExists(form, 'parents') ? form.parents : 0#" required #arrayLen(events) GT 0 ? 'disabled' : ''# />
                 <br />
-                <button type="submit" class="btn btn-primary btn-lg">Check Availability</button>
+                <cfif arrayLen(events) GT 0 && structKeyExists(form, 'date') && seats <= 180 && seats GT 0>
+                <button type="submit" class="btn btn-primary btn-lg" disabled>
+                  Check Availability
+                </button>
+                <cfelse>
+                <button type="submit" class="btn btn-primary btn-lg" >
+                  Check Availability
+                </button>
+                </cfif>
               </div>
             </div>
           </form>
@@ -318,7 +324,7 @@
         <hr class="my-4" />
 
         <cfif arrayLen(events) GT 0 && structKeyExists(form, 'date') && seats <= 180 && seats GT 0>
-        <div class="row gy-5">
+        <div class="row gy-5" id="overview">
           <div class="col-md-5 col-lg-4 order-md-last">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
               <span class="text-primary">Overview</span>
@@ -354,16 +360,28 @@
 
           <div class="col-md-7 col-lg-8">
             <h4 class="mb-3">Dates, shows and post shows</h4>
-            <form method="POST" action="/thank-you">
+            <form method="POST" action="/index.cfm/thank-you/">
+              <cfif structKeyExists(form, 'date')>
+                <input type="hidden" name="date" value="#form.date#" />
+              </cfif>
+              <cfif structKeyExists(form, 'students')>
+                <input type="hidden" name="students" value="#form.students#"/>
+              </cfif>
+              <cfif structKeyExists(form, 'teachers')>
+                <input type="hidden" name="teachers" value="#form.teachers#" />
+              </cfif>
+              <cfif structKeyExists(form, 'parents')>
+                <input type="hidden" name="parents" value="#form.parents#" />
+              </cfif>
               <label class="form-label">Date(s) and Show(s)</label>
               <div class="list-group list-group-radio d-grid gap-2 border-0">
                 <cfloop array="#events#" index="i" item="item">
                 <div class="position-relative">
-                  <input class="form-check-input position-absolute top-50 end-0 me-3 fs-5" type="checkbox" name="listGroupRadioGrid" id="listGroupRadioGrid#i#" value="">
+                  <input class="form-check-input position-absolute top-50 end-0 me-3 fs-5" type="checkbox" name="eventdate" id="eventdate-#i#" value="#item.start#">
                   <label class="list-group-item py-3 pe-5" for="listGroupRadioGrid#i#">
                     <strong class="fw-semibold">#dateTimeFormat(item.start, "EEE mmm d @ h:nn tt")#</strong>
                     <div class="d-block small opacity-75">
-                      <select class="form-select" id="country" required>
+                      <select class="form-select" name="show_id" id="show_id">
                         <option value="">Choose a show...</option>
                         <cfloop array="#shows#" item="show">
                           <option value="#show.id#">#show.name# (#show.type#, #show.duration# mins)</option>
@@ -400,7 +418,7 @@
               <h4 class="mb-3">School Information</h4>
               <div class="col-md-12">
                 <label for="country" class="form-label">School, Organization or Group Name</label>
-                <select class="form-select" id="organization" required="">
+                <select class="form-select" id="organization" name="schoolId" required="">
                   <option value="">Choose...</option>
                   <option value="0">My school is not on the list</option>
                   <cfloop array="#organizations#" item="organization">
@@ -413,15 +431,15 @@
               <div id="organization-details" class="row g-3" style="display:none">
                 <div class="col-sm-12">
                   <label for="school" class="form-label">School, Organization or Group Name</label>
-                  <input type="text" name="school" class="form-control" id="school" name="school" placeholder="School, Organization or Group Name" value="" required="">
+                  <input type="text" name="school" class="form-control" id="school" name="school" placeholder="School, Organization or Group Name" value="">
                 </div>
                 <div class="col-sm-12">
                   <label for="address" class="form-label">Address</label>
-                  <input type="text" name="address" class="form-control" id="address" placeholder="Address" value="" required="">
+                  <input type="text" name="address" class="form-control" id="address" placeholder="Address" value="">
                 </div>
                 <div class="col-sm-6">
                   <label for="city" class="form-label">City</label>
-                  <input type="text" name="city" class="form-control" id="city" placeholder="City" value="" required="">
+                  <input type="text" name="city" class="form-control" id="city" placeholder="City" value="">
                 </div>
                 <div class="col-sm-6">
                   <label for="state" class="form-label">State</label>
@@ -431,11 +449,11 @@
                 </div>
                 <div class="col-sm-6">
                   <label for="school-zip" class="form-label">ZIP</label>
-                  <input type="text" name="school-zip" class="form-control" id="school-zip" placeholder="ZIP" value="" required="">
+                  <input type="text" name="zip" class="form-control" id="school-zip" placeholder="ZIP" value="">
                 </div>
                 <div class="col-sm-6">
                   <label for="phone" class="form-label">Phone</label>
-                  <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone" value="" required="">
+                  <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone" value="">
                 </div>
               </div>
               <br />
@@ -445,19 +463,19 @@
               <div class="row g-3">
                 <div class="col-sm-6">
                   <label for="firstname" class="form-label">First name</label>
-                  <input type="text" class="form-control" id="firstname" placeholder="First Name" value="" required="">
+                  <input type="text" name="firstname" class="form-control" id="firstname" placeholder="First Name" minlength="2" maxlength="128" required>
                 </div>
                 <div class="col-sm-6">
                   <label for="lastname" class="form-label">Last name</label>
-                  <input type="text" class="form-control" id="lastname" placeholder="Last Name" value="" required="">
+                  <input type="text" name="lastname" class="form-control" id="lastname" placeholder="Last Name" minlength="2" maxlength="128" value="" required>
                 </div>
                 <div class="col-sm-6">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                  <input type="email" name="email" class="form-control" id="email" placeholder="you@example.com" required>
                 </div>
                 <div class="col-sm-6">
                   <label for="cell" class="form-label">Phone</label>
-                  <input type="text" name="cell" class="form-control" id="cell" placeholder="Phone" value="" required="">
+                  <input type="text" name="cell" name="cell" class="form-control" id="cell" placeholder="Phone" minlength="10" maxlength="10" required>
                 </div>
               </div>
               
@@ -469,7 +487,9 @@
               </div>
               <br />
 
-              <button class="w-100 btn btn-primary btn-lg" type="submit">Submit</button>
+              <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="return confirm('Are you sure you want to submit?')">
+                Submit
+              </button>
             </form>
 
           </div>

@@ -1,7 +1,5 @@
 <cfinclude template="inc/globals.cfm" />
 <cfscript>
-  //API_URL = "http://127.0.0.1:8000/api"
-
   if (structKeyExists(url, 'id')) {
     // TODO: HANDLE IDS OF SHOWS THAT DON'T EXIST
     req = new http(method = "GET", chartset = "UTF-8", url = API_URL & "/shows")
@@ -41,7 +39,7 @@
         <br /><br />
         <div class="col-12">
           <div class="py-5 text-center">
-            <img class="d-block mx-auto mb-4" src="#show.cover#" alt="" width="248" />
+            <img class="d-block mx-auto mb-4" src="/sites/#$.siteConfig('siteId')#/assets/shows/#listLast(show.cover, '/\')#" alt="" width="248" />
             <h2>#show.name#</h2>
             <h4 class="d-flex gap-2 justify-content-center">
               <span class="badge text-bg-primary">#show.type#</span> &middot; #show.duration# mins

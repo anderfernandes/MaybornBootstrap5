@@ -1,7 +1,5 @@
 <cfinclude template="inc/globals.cfm" />
 <cfscript>
-  //API_URL = "https://astral.ctcd.org/api"
-  //API_URL = "http://172.21.0.3:8000/api"
   start = dateFormat(now(), "yyyy-mm-dd")
   end = dateFormat(now().add("d", 30), "yyyy-mm-dd")
   req = new http(method = "GET", charset = "UTF-8", url = API_URL & "/events/by-date")
