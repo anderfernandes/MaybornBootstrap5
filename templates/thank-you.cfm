@@ -12,7 +12,7 @@
     "taxable": 1,
     "schoolId": form.schoolId,
     // New organization data
-    "school": form.school,
+    "school": structKeyExists(form, "school") ? form.school : "",
     "address": structKeyExists(form, "address") ? form.address : "",
     "city": structKeyExists(form, "city") ? form.city : "",
     "phone": structKeyExists(form, "phone") ? form.phone : "",
@@ -22,7 +22,7 @@
     "email": form.email,
     "cell": structKeyExists(form, "cell") ? form.cell : "",
     "state": "Texas",
-    "zip": form.zip,
+    "zip": structKeyExists(form, "zip") ? form.zip : "",
   }
   arrayEach(listToArray(form.show_id), function (id, i) {
     d = listToArray(form.eventdate)[i]

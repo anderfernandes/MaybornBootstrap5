@@ -92,7 +92,7 @@
     <div class="container">
       <div class="row">
         <cfloop item="show" array="#shows#">
-          <div class="col-3">
+          <div class="col col-md-3 gy-3">
             <a href="?id=#show.id#" class="card" style="text-decoration:none">
               <img src="/sites/#$.siteConfig('siteId')#/assets/shows/#listLast(show.cover, '/\')#" class="card-img-top" alt="#show.name#">
               <div class="card-body">
