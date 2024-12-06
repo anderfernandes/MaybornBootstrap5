@@ -13,3 +13,7 @@ A Mura CMS 7.1 theme that uses Bootstrap 5 and connects to Astral server side.
 4. Run `docker compose up`.
 
 The compose file contains the enrivonmnet variables necessary to connect the services.
+
+## Mura Configuration
+
+Make sure you configure the correct `Domain Alias List` (e.g. `localhost:8888`) under `Site Settings / Edit Settings`.
